@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognito Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div>
+                <img src="icons/icon-48.png" alt="Cognito Logo"> </div>
+                <div class="logo-text">
+                    <h2>Cognito</h2>
+                    <span>Assistant</span>
+                </div>
+            </div>
+            <button class="settings-btn" id="configToggle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="m12 1 0 6m0 6 0 6"></path>
+                    <path d="m12 1 0 6m0 6 0 6" transform="rotate(60 12 12)"></path>
+                    <path d="m12 1 0 6m0 6 0 6" transform="rotate(120 12 12)"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="chat-container" class="chat-container">
+        <div class="welcome-section">
+            <div>
+                <img src="icons/icon-128.png" alt="Cognito Logo"> </div>
+            <h3>Como posso ajudar hoje?</h3>
+            <p>Escolha uma opção abaixo ou digite sua pergunta</p>
+        </div>
+    </div>
+
+    <div class="chat-input-container">
+        <div class="input-area">
+            <textarea
+                id="userInput"
+                placeholder="Digite sua mensagem..."
+                rows="1"
+                maxlength="2000"
+            ></textarea>
+            <div class="input-actions">
+                <button id="clearChat" class="action-btn" title="Nova conversa">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                </button>
+                <button id="sendButton" class="send-btn" title="Enviar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m22 2-7 20-4-9-9-4 20-7z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="input-footer">
+            <div class="mode-selector-wrapper">
+                <button id="modeSelectorBtn" class="mode-selector-btn">
+                    <span>Modo:</span>
+                    <strong id="currentModeText">Chat Inteligente</strong>
+                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div id="modeDropdown" class="mode-dropdown">
+                    <div class="mode-option" data-mode="chat">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Chat Inteligente
+                    </div>
+                    <div class="mode-option" data-mode="project">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        Planejamento de Projeto
+                    </div>
+                    <div class="mode-option" data-mode="content" style="opacity: 0.5; pointer-events: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        Criação de Conteúdo (Em breve)
+                    </div>
+                    <div class="mode-option" data-mode="agenda" style="opacity: 0.5; pointer-events: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Agenda e Prazos (Em breve)
+                    </div>
+                    <div class="mode-option" data-mode="competitor" style="opacity: 0.5; pointer-events: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        Análise de Concorrentes (Em breve)
+                    </div>
+                </div>
+            </div>
+            <span id="charCounter" class="char-counter">0/2000</span>
+        </div>
+    </div>
+
+    <div class="config-overlay" id="configSection">
+        <div class="config-modal">
+            <div class="config-header">
+                <h3>Configurações</h3>
+                <button class="close-btn" id="closeConfig">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="config-tabs">
+                <button class="config-tab active" data-tab="credentials">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Credenciais
+                </button>
+                <button class="config-tab" data-tab="help">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Ajuda
+                </button>
+                <button class="config-tab" data-tab="about">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    Sobre
+                </button>
+            </div>
+
+            <div class="config-content">
+                <div class="config-tab-content active" data-content="credentials">
+                    <div class="config-section">
+                        <div class="section-header">
+                            <h4>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                Board Ativo do Trello
+                            </h4>
+                            <div class="status-indicator" id="trelloStatus"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="boardSelector">Selecione o Board</label>
+                            <select id="boardSelector">
+                                <option>Carregando boards...</option>
+                            </select>
+                        </div>
+                        <div id="boardDetails" style="margin-top: 16px; font-size: 12px; color: var(--text-secondary);">
+                            <p><strong>Board Atual:</strong> <span id="currentBoardName">Nenhum</span></p>
+                            <p style="margin-top: 8px;"><strong>Listas Mapeadas:</strong></p>
+                            <div id="listMappingContainer" style="padding-left: 16px;">Carregando...</div>
+                            <p style="margin-top: 8px;"><strong>Etiquetas Carregadas:</strong></p>
+                            <div id="labelContainer" style="padding-left: 16px; display: flex; flex-wrap: wrap; gap: 6px;">Carregando...</div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <div class="section-header">
+                            <h4>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                                    <path d="M12 2v20M2 12h20"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                Gemini AI
+                            </h4>
+                            <div class="status-indicator" id="geminiStatus"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>API Key Gemini</label>
+                            <input type="password" id="geminiKey" placeholder="Insira sua chave da API Gemini">
+                            <a href="https://makersuite.google.com/app/apikey" target="_blank" class="help-link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                                Obter chave da API
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <div class="section-header">
+                            <h4>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                Credenciais Trello
+                            </h4>
+                        </div>
+                        <div class="input-group">
+                            <label>API Key Trello</label>
+                            <input type="password" id="trelloKey" placeholder="Chave da API Trello">
+                        </div>
+                        <div class="input-group">
+                            <label>Token Trello</label>
+                            <input type="password" id="trelloToken" placeholder="Token de autorização">
+                        </div>
+                        <div class="input-group">
+                             <label>ID do Board (será atualizado pela seleção acima)</label>
+                            <input type="text" id="boardId" placeholder="ID do board de destino" readonly>
+                            <a href="https://trello.com/app-key" target="_blank" class="help-link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                                Obter credenciais
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-tab-content" data-content="help">
+                    <div class="faq-section">
+                        <h3 style="margin-bottom: 20px;">Perguntas Frequentes</h3>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                Como obter a API Key do Gemini?
+                            </button>
+                            <div class="faq-answer">
+                                <p style="margin-bottom: 12px;"><strong>Passo a passo:</strong></p>
+                                <ol>
+                                    <li>Acesse <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+                                    <li>Faça login com sua conta Google</li>
+                                    <li>Clique em "Get API Key" ou "Create API Key"</li>
+                                    <li>Copie a chave gerada</li>
+                                    <li>Cole nas configurações do Cognito</li>
+                                </ol>
+                                <div style="background: var(--bg-primary); border-left: 3px solid var(--warning); padding: 12px; margin-top: 12px; border-radius: 4px;">
+                                    <p style="margin: 0; font-size: 12px;"><strong>Importante:</strong> A API do Gemini tem um plano gratuito com limite de requisições. Mantenha sua chave segura e nunca compartilhe.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                Como obter credenciais do Trello?
+                            </button>
+                            <div class="faq-answer">
+                                <p style="margin-bottom: 12px;"><strong>Passo a passo:</strong></p>
+                                <ol>
+                                    <li>Acesse <a href="https://trello.com/app-key" target="_blank">Trello API Key</a></li>
+                                    <li>Faça login na sua conta Trello</li>
+                                    <li>Copie a <strong>API Key</strong> exibida na página</li>
+                                    <li>Role a página e clique no link verde "Token" (abaixo da API Key)</li>
+                                    <li>Autorize o acesso e copie o <strong>Token</strong> gerado</li>
+                                    <li>Cole ambos nas configurações do Cognito</li>
+                                </ol>
+                                <div style="background: var(--bg-primary); border-left: 3px solid var(--error); padding: 12px; margin-top: 12px; border-radius: 4px;">
+                                    <p style="margin: 0; font-size: 12px;"><strong>Atenção:</strong> O token dá acesso total ao seu Trello. Nunca compartilhe com terceiros.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                Como selecionar o Board correto?
+                            </button>
+                            <div class="faq-answer">
+                                <ol>
+                                    <li>Configure primeiro as credenciais do Trello (API Key e Token)</li>
+                                    <li>Clique no botão de configurações (ícone de engrenagem no topo)</li>
+                                    <li>Aguarde o carregamento dos seus boards</li>
+                                    <li>Use o dropdown "Selecione o Board" na aba Credenciais</li>
+                                    <li>Escolha o board onde deseja criar os cards</li>
+                                    <li>O ID do board será preenchido automaticamente</li>
+                                    <li>As listas e etiquetas do board serão carregadas</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                O que fazer se aparecer erro nas APIs?
+                            </button>
+                            <div class="faq-answer">
+                                <p><strong>Erro de API Key do Gemini:</strong></p>
+                                <ul>
+                                    <li>Verifique se a chave foi copiada corretamente (sem espaços)</li>
+                                    <li>Confirme se você não excedeu o limite gratuito da API</li>
+                                    <li>Tente gerar uma nova chave no Google AI Studio</li>
+                                    <li>Verifique sua conexão com a internet</li>
+                                </ul>
+                                <p style="margin-top: 12px;"><strong>Erro de Trello:</strong></p>
+                                <ul>
+                                    <li>Verifique se API Key e Token estão corretos</li>
+                                    <li>Confirme se o token não expirou</li>
+                                    <li>Tente gerar novas credenciais</li>
+                                    <li>Verifique se o board selecionado ainda existe</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                Minhas credenciais estão seguras?
+                            </button>
+                            <div class="faq-answer">
+                                <p><strong>Sim! Suas credenciais são armazenadas com segurança:</strong></p>
+                                <ul>
+                                    <li>Guardadas apenas no seu navegador (Chrome Storage Sync)</li>
+                                    <li>Não são enviadas para nenhum servidor externo</li>
+                                    <li>Apenas você tem acesso a elas</li>
+                                    <li>Sincronizadas entre dispositivos com sua conta Google</li>
+                                    <li>Criptografadas pelo Chrome</li>
+                                </ul>
+                                <div style="background: var(--bg-primary); border-left: 3px solid var(--error); padding: 12px; margin-top: 12px; border-radius: 4px;">
+                                    <p style="margin: 0; font-size: 12px;"><strong>Atenção:</strong> Nunca compartilhe suas API Keys ou Tokens com terceiros. A extensão nunca pedirá suas credenciais fora do painel de configurações.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                Como funciona o modo Planejamento de Projeto?
+                            </button>
+                            <div class="faq-answer">
+                                <p><strong>O assistente fará perguntas sequenciais:</strong></p>
+                                <ol>
+                                    <li><strong>Nome do Projeto:</strong> Digite um nome descritivo</li>
+                                    <li><strong>Descrição:</strong> Explique o que é o projeto</li>
+                                    <li><strong>Objetivos:</strong> Liste os principais objetivos</li>
+                                    <li><strong>Prazo:</strong> Informe quando deve ser concluído</li>
+                                    <li><strong>Complexidade:</strong> Escolha entre simples, médio ou complexo</li>
+                                    <li><strong>Lista destino:</strong> Escolha onde criar os cards</li>
+                                    <li><strong>Confirmação:</strong> Revise e confirme</li>
+                                </ol>
+                                <p style="margin-top: 12px;">O Cognito então gerará automaticamente um plano detalhado com 15-30 tarefas organizadas e criará cards no Trello com prioridades definidas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-tab-content" data-content="about">
+                    <div class="about-section">
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <img src="icons/icon-128.png" alt="Cognito Logo" style="width: 80px; height: 80px; margin-bottom: 16px;">
+                            <h2 style="margin: 0 0 8px 0;">Cognito Assistant</h2>
+                            <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">Versão 1.0.0</p>
+                        </div>
+
+                        <div class="about-box">
+                            <h3 style="margin-bottom: 12px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Desenvolvido por: Tiago Baptista
+                            </h3>
+                            <p style="margin: 12px 0; font-size: 14px; line-height: 1.6;">
+                                Este projeto foi desenvolvido com dedicação para otimizar seu fluxo de trabalho, integrando IA e produtividade.
+                            </p>
+                            <a href="https://tiagobaptista0.github.io/portifolio/" target="_blank" class="portfolio-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                                Visite meu portfólio
+                            </a>
+                        </div>
+
+                        <div class="about-box" style="border-left: 3px solid #0078D4;">
+                            <h3 style="margin-bottom: 12px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                                Avalie e Contribua
+                            </h3>
+                            <p style="margin: 12px 0 16px 0; font-size: 14px; line-height: 1.6;">
+                                Sua opinião é fundamental para a evolução do Cognito Assistant. Por favor, considere deixar uma avaliação na loja da Microsoft Edge. Você também pode relatar bugs e sugerir novas funcionalidades por lá.
+                            </p>
+                            <a href="https://microsoftedge.microsoft.com/addons/detail/seu-id-da-extensao-aqui" target="_blank" class="portfolio-link" style="width: 100%; text-align: center; justify-content: center; background-color: #0078D4; display: flex;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                                Ir para a Página da Extensão na Microsoft Store
+                            </a>
+                        </div>
+
+                        <div class="about-box" style="background: var(--bg-secondary); border-left: 3px solid var(--primary);">
+                            <h3 style="margin-bottom: 12px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                                Tecnologias Utilizadas
+                            </h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                                <span style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 6px; font-size: 12px; border: 1px solid var(--border);">Chrome Extension API</span>
+                                <span style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 6px; font-size: 12px; border: 1px solid var(--border);">Gemini AI</span>
+                                <span style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 6px; font-size: 12px; border: 1px solid var(--border);">Trello API</span>
+                                <span style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 6px; font-size: 12px; border: 1px solid var(--border);">JavaScript ES6+</span>
+                                <span style="background: var(--bg-tertiary); padding: 6px 12px; border-radius: 6px; font-size: 12px; border: 1px solid var(--border);">HTML5/CSS3</span>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                            <p style="color: var(--text-secondary); font-size: 13px;">
+                                Feito com dedicação para otimizar sua produtividade
+                            </p>
+                            <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">
+                                © 2025 Cognito Assistant. Todos os direitos reservados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-footer">
+                <button id="saveConfig" class="save-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Salvar Credenciais
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="sidebar.js"></script>
+</body>
+</html>

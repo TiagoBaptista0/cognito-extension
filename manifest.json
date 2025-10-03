@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Cognito Assistant",
+  "version": "2.0.0",
+  "description": "Um assistente de IA na sua barra lateral para resumir páginas e criar cards no Trello.",
+  "permissions": [
+    "storage",
+    "sidePanel",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://api.trello.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "<all_urls>"
+  ],
+  "side_panel": {
+    "default_path": "sidebar.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content_script.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "Abrir Cognito Assistant"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
